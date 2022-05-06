@@ -133,7 +133,7 @@ class Detector(object):
         if center is not None:
             x, y = center
             coor_cam = cap.cal_camera_coor(x, y, depth_frame)
-            coor = cam_to_end_RT[:3,:3] @ np.array(coor_cam).reshape(-1, 1) + cam_to_end_RT[:3, 3:]
+            coor = cam_to_base_RT[:3,:3] @ np.array(coor_cam).reshape(-1, 1) + cam_to_base_RT[:3, 3:]
             coor = coor.reshape(3,)
 
             if self.view_result:
@@ -163,7 +163,7 @@ class Detector(object):
                 for (markerCorner, markerID) in zip(corners, ids):
                     x, y = corners2center(markerCorner)
                     coor_cam = cap.cal_camera_coor(x, y, depth_frame)
-                    coor = cam_to_end_RT[:3,:3] @ np.array(coor_cam).reshape(-1, 1) + cam_to_end_RT[:3, 3:]
+                    coor = cam_to_base_RT[:3,:3] @ np.array(coor_cam).reshape(-1, 1) + cam_to_base_RT[:3, 3:]
                     coor = coor.reshape(3,)
                     coors[markerID] = coor
 
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     args = parse_agrs()
 
     cap = RealSense()
-    cam_to_end_RT = np.load('./calibration/camera2end.npy')
+    cam_to_base_RT = np.load('./calibration/camera2base.npy')
 
     window_name = 'RealSense'
     detector = Detector(window_name)
